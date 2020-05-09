@@ -5,9 +5,10 @@
  * @package custom
  * @author Bhao
  * @link https://dwd.moe/
- * @version 1.0.3
+ * @version 1.0.5
  */
 
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $this->comments()->to($comments);
 function threadedComments($comments, $options) {
   $commentClass = '';
@@ -37,11 +38,14 @@ function threadedComments($comments, $options) {
       <img class="mdui-img-circle" src="<?php get_comment_avatar($comments->mail); ?>"/>
     </div>
     <?php get_comment_prefix($comments->mail); if($comments->authorId == $comments->ownerId){ ?>
-      <img src="<?php staticFiles('assets/images/grade/author.png') ?>" class="comment-prefix" mdui-tooltip="{content: '博主'}"/>
+      <img src="<?php staticFiles('images/grade/author.png') ?>" class="comment-prefix" mdui-tooltip="{content: '博主'}"/>
     <?php } ?>
   </div>
   <div class="mdui-card-header-title mdui-typo comment-author"><?php $comments->author(); ?><?php getBrowser($comments->agent); getOs($comments->agent); ?></div>
-  <div class="mdui-card-header-subtitle"><?php $comments->date('Y-m-d H:i'); ?></div>
+  <div class="mdui-card-header-subtitle"><?php $comments->date('Y-m-d H:i'); ?><?php if ('waiting' == $comments->status) { ?>
+     <br>
+     <div class="mdui-text-color-red-400 comment-waiting" style="font-weight:bold;">您的评论正在等待审核</div>
+    <?php } ?></div>
   <div class="mdui-card-menu">
     <?php $comments->reply('<button class="mdui-btn mdui-btn-dense mdui-ripple comment-reply">回复</button>'); ?>
   </div>
@@ -76,7 +80,7 @@ $this->need('includes/sidebar.php');
         </div>
       </a>");}
     echo '</div>';
-    if(!$this->content == ""){echo '<div class="mdui-card page-card mdui-shadow-10 mdui-typo links-comments">'.parseContent(parseBiaoQing($this->content)).'</div>';}
+    if(!$this->content == ""){echo '<div class="mdui-card page-card mdui-shadow-10 mdui-typo links-comments">'.parseBiaoQing(parseContent($this->content)).'</div>';}
     if($this->allow('comment')): ?>
     <div id="<?php $this->respondId(); ?>" class="mdui-card page-card mdui-shadow-10 links-comments comment-id">
       <div class="comment-cancel">
@@ -95,7 +99,7 @@ $this->need('includes/sidebar.php');
         </div>
         <?php else: ?>
         <div class="mdui-textfield comment-left">
-          <img src="<?php staticFiles('assets/images/avatar.png') ?>" class="mdui-icon mdui-img-circle comments-avatar"/>
+          <img src="<?php staticFiles('images/avatar.png') ?>" class="mdui-icon mdui-img-circle comments-avatar"/>
           <label class="mdui-textfield-label">昵称</label>
           <input class="mdui-textfield-input" type="text" name="author" value="<?php $this->remember('author'); ?>" required></input>
         </div>
@@ -103,7 +107,8 @@ $this->need('includes/sidebar.php');
           <i class="mdui-icon material-icons">email</i>
           <label class="mdui-textfield-label" <?php if ($this->options->commentsRequireMail): ?> class="required"<?php endif; ?>>邮箱</label>
           <input class="mdui-textfield-input" id="email" type="email" name="mail" value="<?php $this->remember('mail'); ?>"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>></input>
-        </div>
+          <input type="hidden" name="receiveMail" id="receiveMail" value="yes" />
+		</div>
         <div class="mdui-textfield comment-middle">
           <i class="mdui-icon material-icons">web</i>
           <label class="mdui-textfield-label" <?php if ($this->options->commentsRequireURL): ?> class="required"<?php endif; ?>>网址(选填)</label>
@@ -111,14 +116,14 @@ $this->need('includes/sidebar.php');
         </div>
         <?php endif; ?>
         <center>
-          <button type="submit" id="submit" class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple submit">发表评论</button>
+          <button type="submit" id="submit" class="mdui-btn mdui-btn-block mdui-text-color-theme mdui-ripple submit">发表评论</button>
         </center>
       </form>
     </div>
     <div id="comment-list" class="mdui-card page-card mdui-shadow-10 links-comment-list">
       <div class="mdui-card-content">
         <div class="comment-count">
-          <h3>全部留言 <?php $this->commentsNum(_t('(暂无留言)'), _t('(共 1 条留言)'), _t('(共 %d 条留言)')); ?></h3>
+          <h3>全部留言 (<?php $this->commentsNum(_t('<span>暂无留言</span>'), _t('共 <span>1</span> 条留言'), _t('共 <span>%d</span> 条留言')); ?>)</h3>
         </div>
         <?php if ($comments->have()): ?>
         <div class="comment-container">
