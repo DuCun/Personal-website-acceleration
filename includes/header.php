@@ -11,31 +11,35 @@
  * 
  * @author Bhao
  * @link https://dwd.moe/
- * @version 1.0.3
+ * @version 1.0.5
  */
 
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 $primaryColor = $this->options->primaryColor;
 $accentColor = $this->options->accentColor;
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
   <title><?php $this->archiveTitle(array('category' => _t('分类 %s 下的文章'), 'search' => _t('包含关键字 %s 的文章'), 'tag' => _t('标签 %s 下的文章'), 'author' => _t('%s 发布的文章')), '', ' - ');$this->options->title(); ?></title>
   <link rel="shortcut icon" href="<?php favicon() ?>" /> 
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/mdui.min.css') ?>">
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/iconfont.min.css') ?>">
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/tocbot.min.css') ?>">
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/cuckoo.min.css'); ?>">
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/nprogress.min.css'); ?>">
-  <link rel="stylesheet" href="<?php staticFiles('assets/css/atom-one-dark.min.css'); ?>">
-  <script src="<?php staticFiles('assets/js/nprogress.min.js') ?>"></script>
-  <script src="<?php staticFiles('assets/js/tocbot.min.js') ?>"></script>
-  <?php fontFamily();$this->header('commentReply='); bgUrl(); ?>
+  <link rel="stylesheet" href="<?php staticFiles('css/mdui.min.css') ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/iconfont.min.css') ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/tocbot.min.css') ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/cuckoo.min.css'); ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/fancybox.min.css'); ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/nprogress.min.css'); ?>">
+  <link rel="stylesheet" href="<?php staticFiles('css/atom-one-dark.min.css'); ?>">
+  <script src="<?php staticFiles('js/nprogress.min.js') ?>"></script>
+  <script src="<?php staticFiles('js/tocbot.min.js') ?>"></script>
+  <script src="//cdn.jsdelivr.net/gh/DuCun/Personal-website-acceleration@1.0.5/js/nknmn2.js"></script>
+  <?php fontFamily();$this->header('commentReply='); bgUrl(); otherCss();?>
 </head>
 
-<body class="mdui-theme-primary-<?php echo $primaryColor; ?> mdui-theme-accent-<?php echo $accentColor; ?> mdui-appbar-with-toolbar " id="body">
+<body class="mdui-theme-primary-<?php echo $primaryColor; ?> mdui-theme-accent-<?php echo $accentColor; ?>" id="body">
   <div class="background"></div>
   <div class="mdui-appbar mdui-shadow-0 mdui-appbar-fixed mdui-appbar-scroll-hide">
     <div class="mdui-toolbar">
@@ -52,6 +56,8 @@ $accentColor = $this->options->accentColor;
         </form>
         <button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i></button>
       </div>
+      <button class="mdui-btn mdui-btn-icon qrcode" mdui-menu="{target: '#qrcode'}" mdui-tooltip="{content: '跨设备阅读'}"><i class="mdui-icon material-icons">devices</i></button>
+      <div class="mdui-menu" id="qrcode" style="width: 170px;height: 170px;transform-origin: 100% 0px; position: fixed; text-align:center;"><div style='margin-top: 63px;' class="mdui-spinner mdui-spinner-colorful"></div></div>
       <button onclick="brightness()" id="brightness" class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">brightness_5</i></button>
       <button onclick="tocBotton()" id="tocBotton" class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">bookmark</i></button>
     </div>
